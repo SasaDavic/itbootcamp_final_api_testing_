@@ -1,0 +1,2602 @@
+{
+	"info": {
+		"_postman_id": "606387d6-0967-4d08-a5e7-98647f152c99",
+		"name": "Final API Testing",
+		"description": "**SR:**\n\nOva kolekcija sadrži testove za REST API aplikaciju koja upravlja korisnicima, profilima i gradovima. Testovi su organizovani u četiri logičke grupe: **auth**, **city**, **profile** i **user**. Pokrivene su standardne **CRUD operacije** (Create, Read, Update, Delete), kao i dodatne validacije, autentifikacija i verifikacija korisnika.\n\nCilj je da se simuliraju realne situacije kroz koje korisnik ili administrator prolazi tokom korišćenja aplikacije – od registracije i prijave, do ažuriranja profila i upravljanja korisnicima i gradovima.\n\n**EN:**\n\nThis collection contains tests for a REST API application that manages users, profiles, and cities. The tests are organized into four logical groups: auth, city, profile, and user. Standard CRUD operations (Create, Read, Update, Delete) are covered, along with additional validations, authentication, and user verification.\n\nThe goal is to simulate real-world scenarios that a user or administrator may encounter while using the application – from registration and login to profile updates and managing users and cities.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23500535",
+		"_collection_link": "https://www.postman.com/material-cosmonaut-58351614/workspace/it-bootcamp-x/collection/23500535-606387d6-0967-4d08-a5e7-98647f152c99?action=share&source=collection_link&creator=23500535"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "it should GET home API url",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje servera, testiramo da li je server dostupan.\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "It should NOT POST login if body is empty",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje prijavljivanja sa praznim requestom.\r",
+									"\r",
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"    \r",
+									"pm.test(\"Verify email error messages: MISSING, IS_EMPTY, EMAIL_IS_NOT_VALID\", function(){\r",
+									"    let jsonData = pm.response.json();\r",
+									"    let errors = jsonData.errors.msg;\r",
+									"    // Pravimo prazan niz\r",
+									"    let emailErrors = [];\r",
+									"    for (let i = 0; i < errors.length; i++) {\r",
+									"        if (errors[i].param === \"email\") {\r",
+									"            //dodaje gresku u niz\r",
+									"            emailErrors.push(errors[i].msg);\r",
+									"        }\r",
+									"    }\r",
+									"    pm.expect(emailErrors).to.include.members([\"MISSING\", \"IS_EMPTY\", \"EMAIL_IS_NOT_VALID\"]);\r",
+									"});\r",
+									"pm.test(\"Verify that there are exactly 3 error messages for email\", function() {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    let errors = jsonData.errors.msg;\r",
+									"    // Pravimo prazan niz\r",
+									"    let emailErrors = [];\r",
+									"    for (let i = 0; i < errors.length; i++) {\r",
+									"        if (errors[i].param === \"email\") {\r",
+									"            emailErrors.push(errors[i].msg);\r",
+									"        }\r",
+									"    }\r",
+									"    pm.expect(emailErrors).to.have.lengthOf(3);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verify password error messages: MISSING, IS_EMPTY, PASSWORD_TOO_SHORT_MIN_5\", function() {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    let errors = jsonData.errors.msg;\r",
+									"    // Pravimo prazan niz\r",
+									"    let passErrors = [];\r",
+									"    for (let i = 0; i < errors.length; i++) {\r",
+									"        if (errors[i].param === \"password\") {\r",
+									"            passErrors.push(errors[i].msg);\r",
+									"        }\r",
+									"    }\r",
+									"    pm.expect(passErrors).to.include.members([\"MISSING\", \"IS_EMPTY\", \"PASSWORD_TOO_SHORT_MIN_5\"]);\r",
+									"});\r",
+									"pm.test(\"Verify that there are exactly 3 error messages for password\", function() {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    let errors = jsonData.errors.msg;\r",
+									"    // Pravimo prazan niz\r",
+									"    let passErrors = [];\r",
+									"    for (let i = 0; i < errors.length; i++) {\r",
+									"        if (errors[i].param === \"password\") {\r",
+									"            passErrors.push(errors[i].msg);\r",
+									"        }\r",
+									"    }\r",
+									"    pm.expect(passErrors).to.have.lengthOf(3);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET token (admin login)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje prijavljivanja sa validnim podacima za prijavu.\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"let schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"token\": {\"type\": \"string\"},\r",
+									"        \"user\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"_id\": {\"type\": \"string\"},\r",
+									"                \"name\": {\"type\": \"string\"},\r",
+									"                \"email\": {\"type\": \"string\"},\r",
+									"                \"role\": {\"type\": \"string\"},\r",
+									"                \"verified\": {\"type\": \"boolean\"},\r",
+									"                \"verification\": {\"type\": \"string\"}\r",
+									"            }\r",
+									"        }\r",
+									"\r",
+									"\r",
+									"},\r",
+									"    \"required\": [\"token\", \"user\"]\r",
+									"};\r",
+									"pm.test(\"Validate schema\", function() {\r",
+									"    pm.response.to.have.jsonSchema(schema);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should POST register (random user)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje registracije sa validnim podacima.\r",
+									"//Status 201\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"//verifikujte da su podaci u responsu isti kao sto u requestu. Verifikujte da je role pri registraciji jednaka “user”.\r",
+									"pm.test(\"Response should be the same as request\", function () {\r",
+									"   let jsonData = pm.response.json();\r",
+									"   let requestData = JSON.parse(pm.request.body.raw);\r",
+									"   pm.expect(jsonData.user.name).equals(requestData.name);\r",
+									"});\r",
+									"//verifikujte semu responsa\r",
+									"let schema = {\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"token\": {\"type\": \"string\"},\r",
+									"        \"user\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"                \"_id\": {\"type\": \"string\"},\r",
+									"                \"name\": {\"type\": \"string\"},\r",
+									"                \"email\": {\"type\": \"string\"},\r",
+									"                \"role\": {\"type\": \"string\"},\r",
+									"                \"verified\": {\"type\": \"boolean\"},\r",
+									"                \"verification\": {\"type\": \"string\"}\r",
+									"\r",
+									"            }\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									"pm.test(\"Response should match schema\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.jsonSchema(schema);\r",
+									"\r",
+									"});\r",
+									"let responseId = pm.response.json().user._id;\r",
+									"pm.environment.set(\"userId\", responseId);\r",
+									"let token = pm.response.json().token;\r",
+									"pm.environment.set(\"authToken\", token);\r",
+									"//potrebno za verifikaciju\r",
+									"let verificationId = pm.response.json().user.verification;\r",
+									"pm.environment.set(\"verificationId\", verificationId);\r",
+									"\r",
+									"\r",
+									"let jsonData = JSON.parse(pm.request.body.raw);\r",
+									"pm.environment.set(\"userName\", jsonData.name);\r",
+									"pm.environment.set(\"userEmail\", jsonData.email);\r",
+									"pm.environment.set(\"userPassword\", jsonData.password);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{$randomUserName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"password\": \"{{$randomPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT POST a register if email already exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//testiranje registracije sa postojecim emailom\r",
+									"//Status 422\r",
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be object\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"//response treba da ima property errors\r",
+									"pm.test(\"Response should hava property errors\", function() {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"errors\");\r",
+									"});\r",
+									"//verifikujte gresku EMAIL_ALREADY_EXISTS\r",
+									"pm.test(\"Response should have error message EMAIL_ALREADY_EXISTS\", function() {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.errors.msg).to.eql(\"EMAIL_ALREADY_EXISTS\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"sasa\",\r\n    \"email\": \"sasa@sasa.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should POST verify",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje verifikacije sa validnim id-jem. Id se dobija kao response za registraciju.\r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function() {\r",
+									"   pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"//response treba da ima propertije email i verified\r",
+									"pm.test(\"Response should have email and verified properties\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"email\");\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"verified\");\r",
+									"});\r",
+									"//properti verified treba da bude true\r",
+									"pm.test(\"Verified property should be true\", function () {\r",
+									"    pm.expect(pm.response.json().verified).to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"verifiedEmail\", pm.response.json().email);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{verificationId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT POST verify if user is already verified",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Verifikacija vec verifikovanog korisnika.\r",
+									"//Status 404\r",
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"//Verifikujte gresku NOT_FOUND_OR_ALREADY_VERIFIED\r",
+									"pm.test(\"Verify error message: NOT_FOUND_OR_ALREADY_VERIFIED\", function () {\r",
+									"    pm.expect(pm.response.json().errors.msg).to.equals(\"NOT_FOUND_OR_ALREADY_VERIFIED\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{verificationId}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should POST forgot",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje sa validnim email-om. Dobija se verification koji bi se koristio za /reset API poziv\r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"//response treba da ima propertije msg i verification\r",
+									"pm.test(\"Response should have properties: msg and verification\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"msg\");\r",
+									"    pm.expect(jsonData).to.have.property(\"verification\");\r",
+									"});\r",
+									"let jsonData = pm.response.json();\r",
+									"pm.environment.set(\"resetMail\", jsonData.email);\r",
+									"pm.environment.set(\"resetVerification\", jsonData.verification);\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{verifiedEmail}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/forgot",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should POST reset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Resetovanje sa validnim passwordom i id-em. \r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function() {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"//response treba da ima property msg koji treba da ima vrednost PASSWORD_CHANGED\r",
+									"pm.test(\"Response should contain msg property with value PASSWORD_CHANGED\", function() {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.msg).to.equal(\"PASSWORD_CHANGED\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{resetVerification}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reset",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reset"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT be able to consume the route since no token was sent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Osvezavanje tokena ukoliko se ne salje stari token.\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/token",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET a fresh token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Osvezavanje tokena.\r",
+									"//Status 200\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is an object', function () {\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"pm.test('Response has a token property', function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"token\");\r",
+									"});\r",
+									"//response treba da ima property token\r",
+									"\r",
+									"pm.environment.unset(\"authToken\");\r",
+									"pm.environment.set(\"authToken\", pm.response.json().token);\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{authToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/token",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.unset(\"userName\");\r",
+									"pm.environment.unset(\"userEmail\");\r",
+									"pm.environment.unset(\"userPassword\");\r",
+									"pm.environment.unset(\"verifiedEmail\");\r",
+									"pm.environment.unset(\"resetMail\");\r",
+									"pm.environment.unset(\"resetVerification\");\r",
+									"pm.environment.unset(\"authToken\");\r",
+									"pm.environment.unset(\"userId\");\r",
+									"pm.environment.unset(\"verificationId\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "**SR:**  \nOvaj folder sadrži testove autentifikacije korisnika. Pokrivene su operacije registracije, prijave, verifikacije mejla, resetovanja lozinke i osvežavanja tokena. Testovi proveravaju validaciju, zaštitu podataka i ispravnost autentifikacionih tokova.\n\n**EN:**  \nThis folder contains user authentication tests. It covers registration, login, email verification, password reset, and token refresh. The tests verify validation, data protection, and correctness of authentication flows."
+		},
+		{
+			"name": "City",
+			"item": [
+				{
+					"name": "it should GET token (city)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Prijavljivanje kao administrator kako biste dobili token potreban za sledeće api pozive.\r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response is an object\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"//u responsu treba da postoji property token\r",
+									"pm.test(\"Response should have property token\", function() {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"token\");\r",
+									"});\r",
+									"pm.environment.set(\"AdminToken\", pm.response.json().token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"email\": \"admin@admin.com\",\r\n\"password\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT be able to consume the route since no token was sent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Citanje gradova bez tokena.\r",
+									"//Status 401\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET all the cities",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Citanje kolekcije gradova.\r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response is an object\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"});\r",
+									"//property docs treba da bude niz\r",
+									"pm.test(\"Property docs is an array\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.docs).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET the cities with filters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Filtriranje gradova.\r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function() {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"});\r",
+									"//property docs treba da bude niz\r",
+									"pm.test(\"Property docs is an array\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.docs).to.be.an(\"array\");\r",
+									"});\r",
+									"//u responsu treba da postoji objekat koji za name ima vrednost Bucaramanga\r",
+									"pm.test(\"Response should contain an object with name 'Bucaramanga'\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    let found = false;\r",
+									"    for(let i = 0; i < jsonData.docs.length; i++) {\r",
+									"        if(jsonData.docs[i].name === \"Bucaramanga\") {\r",
+									"            found = true;\r",
+									"    }}\r",
+									"    pm.expect(found).to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cities?filter=Bucaramanga&fields=name",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "Bucaramanga"
+								},
+								{
+									"key": "fields",
+									"value": "name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT POST a city without name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Kreiranje greda kada se ne salje naziv grada.\r",
+									"//Status 422\r",
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function() {\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"\r",
+									"});\r",
+									"//response treba da ima property errors\r",
+									"pm.test(\"Response should have property errors\", function() {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/cities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should POST a city",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Kreiranje grada.\r",
+									"//Status 201\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response is an object\", function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"//response treba da ima propertije name i _id\r",
+									"pm.test(\"Response has name and _id properties\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('name');\r",
+									"    pm.expect(pm.response.json()).to.have.property('_id');\r",
+									"});\r",
+									"\r",
+									"let createdCityID = pm.response.json()._id;\r",
+									"pm.environment.set(\"createdCityID\", createdCityID);\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Nis\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT POST a city that already exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Kreiranje grada sa vec postojecim imenom.\r",
+									"//Status 422\r",
+									"pm.test('Status code is 422', function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"//response treba da ima property errors\r",
+									"pm.test('Response body contains errors property', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('errors');\r",
+									"});\r",
+									"\r",
+									"pm.test('Response body contains CITY_ALREADY_EXISTS error message', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.errors.msg).to.eql('CITY_ALREADY_EXISTS');\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test('Response body is an object', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Nis\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cities",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET a city by the given id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Citanje grada.\r",
+									"//Status 200\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is an object', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"//response treba da ima property name\r",
+									"pm.test('Response has a name property', function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('name');\r",
+									"});\r",
+									"//response treba da ima property id, i da je id jednak poslatom id-ju.\r",
+									"pm.test('Response has an id property that matches the created city ID', function () {\r",
+									"    const responseId = pm.response.json()._id;\r",
+									"    const createdCityID = pm.environment.get('createdCityID');\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"_id\");\r",
+									"    pm.expect(responseId).to.equal(createdCityID);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cities/{{createdCityID}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								"{{createdCityID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should UPDATE a city given the id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Azuriranje grada.\r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function () {\r",
+									"    let jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.an(\"object\");\r",
+									"});\r",
+									"//response treba da ima property id, i da je id jednam poslatom id-ju.\r",
+									"pm.test(\"Response should have property id\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"_id\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response has property _id that matches the created city ID\", function () {\r",
+									"    const createdCityID = pm.environment.get('createdCityID');\r",
+									"    pm.expect(pm.response.json()._id).to.equal(createdCityID);\r",
+									"});\r",
+									"//response treba da ima property name, i da name ima vrednost prosledjenog naziva (novo ima grada)\r",
+									"pm.test(\"Response should have property name\", function() {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"name\");\r",
+									"});\r",
+									"pm.test(\"Value of name property should match the expected name\", function() {\r",
+									"    const expectedName = pm.variables.get(\"newCityName\"); //lokalna promenljiva\r",
+									"    const actualName = pm.response.json().name;\r",
+									"    pm.expect(expectedName).to.equal(actualName);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"newCityName\", \"Kikinda\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{createdCityID}}\",\r\n    \"name\": \"{{newCityName}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cities/{{createdCityID}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								"{{createdCityID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should DELETE a city given the id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Brisanje grada\r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function () {\r",
+									"    pm.response.to.be.json; //treba da bude json\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"//response treba da ima property msg i da msg ima vrednost DELETED\r",
+									"pm.test(\"Response should have a property msg\", function() {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"msg\");\r",
+									"});\r",
+									"pm.test(\"Response should have message DELETED\", function() {\r",
+									"    pm.expect(pm.response.json().msg).to.equal(\"DELETED\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AdminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"{{createdCityID}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cities/{{createdCityID}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cities",
+								"{{createdCityID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.unset(\"AdminToken\");\r",
+									"pm.environment.unset(\"createdCityID\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "**SR:**  \nTestovi u ovom folderu proveravaju CRUD operacije nad gradovima. Obuhvataju dodavanje novog grada, pretragu svih gradova ili pojedinačnih, ažuriranje i brisanje. Posebna pažnja je posvećena testiranju sortiranosti i performansi odgovora.\n\n**EN:**  \nThis folder tests CRUD operations on cities. It includes adding a new city, retrieving all or specific cities, updating, and deleting. Special focus is on testing sorting and response performance."
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "it should POST user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//pm.variables.replaceIn(string)\t\r",
+									"//Uzme string koji sadrži {{}} varijable i zamenjuje ih stvarnim vrednostima\r",
+									"let generatedPassword = pm.variables.replaceIn(\"{{$randomPassword}}\");\r",
+									"pm.environment.set(\"userPass\", generatedPassword);\r",
+									"\r",
+									"let generatedEmail = pm.variables.replaceIn(\"{{$randomEmail}}\").toLowerCase();\r",
+									"pm.environment.set(\"userEmail\", generatedEmail);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Kreiranje korisnika koji ce se dalje koristiti u profile testovima.\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"userToken\", pm.response.json().token);\r",
+									"pm.environment.set(\"userId\", pm.response.json().user._id);\r",
+									"pm.environment.set(\"verification\", pm.response.json().user.verification);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"sasa\",\r\n    \"email\": \"{{userEmail}}\",\r\n    \"password\": \"{{userPass}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET token (profile)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje prijavljivanja sa validnim podacima za prijavu.\r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function() {\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"//u responsu treba da postoji property token\r",
+									"pm.test(\"Response has property token\", function() {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"token\");\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"userToken\", pm.response.json().token);\r",
+									"pm.environment.set(\"userId\", pm.response.json().user._id);\r",
+									"pm.environment.set(\"verification\", pm.response.json().user.verification);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{userEmail}}\",\r\n    \"password\": \"{{userPass}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT be able to consume the route since no token was sent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Pokusaj citanja podataka za ulogovanog korisnika ukoliko se token ne salje kao deo requesta.\r",
+									"\r",
+									"//Status 401\r",
+									"pm.test(\"Status code is 401\", function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Citanje podataka za ulogovanog korisnika\r",
+									"\r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response is object\", function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"//u responsu treba da postoji propertiji email i name\r",
+									"pm.test(\"Response have email and name\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"name\");\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"email\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT UPDATE profile empty name/email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Email i name se salju prazni\r",
+									"\r",
+									"//Status 422\r",
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response is an object\", function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"//u responsu treba da postoji property errors\r",
+									"pm.test(\"Response contains errors property\", function () {\r",
+									"    pm.response.to.have.jsonSchema({\r",
+									"        \"type\": \"object\",\r",
+									"        \"properties\": {\r",
+									"            \"errors\": {\r",
+									"                \"type\": \"object\"\r",
+									"            }\r",
+									"        },\r",
+									"        \"required\": [\"errors\"]\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"//u responsu treba da postoji property errors\r",
+									"pm.test(\"Response have errors property\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"urlTwitter\": \"\",\r\n    \"urlGitHub\": \"\",\r\n    \"phone\": \"\",\r\n    \"city\": \"\",\r\n    \"country\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should UPDATE profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje api poziva u kom se salje token. \r",
+									"\r",
+									"user = {\r",
+									"    \"type\": \"object\",\r",
+									"\t\t\"properties\": {\r",
+									"\t\t\t\"name\": {\"type\": \"string\"},\r",
+									"\t\t\t\"urlTwitter\": {\"type\": \"string\"},\r",
+									"\t\t\t\"urlGitHub\": {\"type\": \"string\"},\r",
+									"\t\t\t\"phone\": {\"type\": \"string\"},\r",
+									"\t\t\t\"city\": {\"type\": \"string\"},\r",
+									"\t\t\t\"country\": {\"type\": \"string\"}\r",
+									"\t\t}\r",
+									" }\r",
+									" \r",
+									" pm.test(\"Response should have user schema\", function() {\r",
+									"\tpm.response.to.have.jsonSchema(user); \r",
+									" });\r",
+									"\r",
+									"//Status 200\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object, i testiranje izvrstiti preko deep jednakosti.\r",
+									"pm.test(\"Response body should be an object\", function () {\r",
+									"\tpm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"}); \r",
+									"\r",
+									"pm.test(\"Response body should have correct values\", function () {\r",
+									"\tlet jsonData = pm.response.json();\r",
+									"\tpm.expect(jsonData.name).to.deep.equal(\"Test123456\");\r",
+									"\tpm.expect(jsonData.urlTwitter).to.deep.equal(\"https://hello.com\");\r",
+									"    pm.expect(jsonData.urlGitHub).to.deep.equal(\"https://hello.io\");\r",
+									"    pm.expect(jsonData.phone).to.deep.equal(\"123123123\");\r",
+									"    pm.expect(jsonData.city).to.deep.equal(\"Bucaramanga\");\r",
+									"    pm.expect(jsonData.country).to.deep.equal(\"Colombia\");\r",
+									"}); \r",
+									"\r",
+									"\r",
+									"/*name == Test123456\r",
+									"urlTwitter == https://hello.com\r",
+									"urlGitHub == https://hello.io\r",
+									"phone == 123123123\r",
+									"city == Bucaramanga\r",
+									"country == Colombia*/\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Test123456\",\r\n    \"urlTwitter\": \"https://hello.com\",\r\n    \"urlGitHub\": \"https://hello.io\",\r\n    \"phone\": \"123123123\",\r\n    \"city\": \"Bucaramanga\",\r\n    \"country\": \"Colombia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT UPDATE profile with not valid URL´s",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salju se nevalidni linkovi\r",
+									"\r",
+									"//Staus 422\r",
+									"pm.test('Status code is 422', function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response body should be an object\", function () {\r",
+									"\tpm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"}); \r",
+									"\r",
+									"//response treba da ima property errors\r",
+									"pm.test(\"Response should have property errors\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"errors\");\r",
+									"}); \r",
+									"//errors treba da imaju property msg\r",
+									"pm.test(\"Errors should have property msg\", function () {\r",
+									"    pm.expect(pm.response.json().errors).to.have.property(\"msg\");\r",
+									"}); \r",
+									"//verifikuje da msg ima vrednost NOT_A_VALID_URL\r",
+									"pm.test(\"Msg have values NOT_A_VALID_URL\", function() {\r",
+									"    const errors = pm.response.json().errors;\r",
+									"    let msgError = [];\r",
+									"\r",
+									"    // Prvo popunimo niz iz response\r",
+									"    for (let i = 0; i < errors.msg.length; i++) {\r",
+									"        msgError.push(errors.msg[i].msg);\r",
+									"    }\r",
+									"\r",
+									"    // Zatim proverimo svaku vrednost\r",
+									"    for (let i = 0; i < msgError.length; i++) {\r",
+									"        pm.expect(msgError[i]).to.equal(\"NOT_A_VALID_URL\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "/*\r\nSalju se nevalidni linkovi kao na primer:\r\nuser = {\r\nname: 'Test123456',\r\nurlTwitter: 'invalidUrl',\r\nurlGitHub: 'alsoInvalid',\r\nphone: '123123123',\r\ncity: 'Bucaramanga',\r\ncountry: 'Colombia'\r\n      }\r\n      */\r\n{\r\n    \"name\": \"Test123456\",\r\n    \"urlTwitter\": \"invalidUrl\",\r\n    \"urlGitHub\": \"alsoInvalid\",\r\n    \"phone\": \"123123123\",\r\n    \"city\": \"Bucaramanga\",\r\n    \"country\": \"Colombia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT change password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje api poziva u kom se salje token.\r",
+									"//Kao oldPassword salje se nevazeci password.\r",
+									"\r",
+									"//Status 409\r",
+									"pm.test('Status code is 409', function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is an object', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"//response treba da ima property errors\r",
+									"pm.test('Response has errors property', function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});\r",
+									"//errors treba da ima property msg koji je jednak WRONG_PASSWORD\r",
+									"pm.test('Errors property has msg property', function () {\r",
+									"    pm.expect(pm.response.json().errors).to.have.nested.property(\"msg\");\r",
+									"});\r",
+									"\r",
+									"pm.test('Msg property is WRONG_PASSWORD', function () {\r",
+									"    pm.expect(pm.response.json().errors.msg).to.eql('WRONG_PASSWORD');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"nevazeci oldPassword\",\r\n    \"newPassword\": \"novaSifra123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile/changePassword",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile",
+								"changePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT change a too short password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje api poziva u kom se salje token. \r",
+									"//Novi password treba da ima manje od 5 karaktera.\r",
+									"\r",
+									"//Status 422\r",
+									"pm.test(\"Status code is 422\", function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function() {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"//response treba da ima property errors\r",
+									"pm.test(\"Response should have property errors\", function() {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"errors\");\r",
+									"});\r",
+									"//treba da postoji poruka PASSWORD_TOO_SHORT_MIN_5\r",
+									"pm.test(\"Error msg should be PASSWORD_TOO_SHORT_MIN_5\", function() {\r",
+									"    pm.expect(pm.response.json().errors.msg[0].msg).to.equal(\"PASSWORD_TOO_SHORT_MIN_5\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"{{userPass}}\",\r\n    \"newPassword\": \"111\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile/changePassword",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile",
+								"changePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should change password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Testiranje api poziva u kom se salje token. Salju se validne lozinke.\r",
+									"\r",
+									"//Status 200\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is an object', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"//response treba da ima property msg, koji je jednak PASSWORD_CHANGED\r",
+									"pm.test(\"Response has property msg\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"msg\")\r",
+									"});\r",
+									"\r",
+									"pm.test('Response has correct message', function () {\r",
+									"    pm.expect(pm.response.json().msg).to.eql('PASSWORD_CHANGED');\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"userPass\", pm.variables.get(\"new_pass\"));\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"new_pass\", \"{{$randomPassword}}\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"oldPassword\": \"{{userPass}}\",\r\n    \"newPassword\": \"{{new_pass}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile/changePassword",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile",
+								"changePassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.unset(\"userPass\");\r",
+									"pm.environment.unset(\"userEmail\");\r",
+									"pm.environment.unset(\"userToken\");\r",
+									"pm.environment.unset(\"userId\");\r",
+									"pm.environment.unset(\"verification\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"new_pass\", \"{{$randomPassword}}\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "**SR:**  \nOvaj folder sadrži testove koji se odnose na korisnički profil. Proverava se dohvat i izmena korisničkih podataka, kao i promena lozinke. Korisnik se kreira i prijavljuje kao deo pripreme testa.\n\n**EN:**  \nThis folder includes tests related to the user profile. It covers fetching and updating user data, as well as changing the password. A user is created and logged in as part of the test setup."
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "it should GET token as admin (user)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salju se admin podaci. (Sacuvati token sa responsa u admin token)\r",
+									"\r",
+									"//Status 200\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is an object', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"//u responsu treba da postoji property token\r",
+									"pm.test('Response contains token property', function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('token');\r",
+									"});\r",
+									"\r",
+									"//admin token se cuva u environment variable\r",
+									"pm.environment.set(\"adminToken\", pm.response.json().token); \r",
+									"pm.environment.set(\"adminMail\", pm.response.json().user.email);\r",
+									"pm.environment.set(\"adminName\", pm.response.json().user.name);\r",
+									"pm.environment.set(\"adminId\", pm.response.json().user._id);\r",
+									"let req = JSON.parse(pm.request.body);\r",
+									"pm.environment.set(\"adminPas\", req.password);\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@admin.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should POST user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Kreiramo usera koji ce se koristiti u daljim API pozivima.\r",
+									"\r",
+									"//Status 201\r",
+									"pm.test('Status code is 201', function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function() {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"//response treba da ima propertije _id, name, email, verification\r",
+									"pm.test(\"Response should have properties _id, name, email, verification\", function () {\r",
+									"    pm.expect(pm.response.json().user).to.have.property(\"_id\");\r",
+									"    pm.expect(pm.response.json().user).to.have.property(\"name\");\r",
+									"    pm.expect(pm.response.json().user).to.have.property(\"email\");\r",
+									"    pm.expect(pm.response.json().user).to.have.property(\"verification\");\r",
+									"});\r",
+									"\r",
+									"//admin token se cuva u environment variable\r",
+									"pm.environment.set(\"userToken\", pm.response.json().token); \r",
+									"pm.environment.set(\"userMail\", pm.response.json().user.email);\r",
+									"pm.environment.set(\"userName\", pm.response.json().user.name);\r",
+									"pm.environment.set(\"userId\", pm.response.json().user._id);\r",
+									"pm.environment.set(\"verificationId\", pm.response.json().user.verification);\r",
+									"let req = JSON.parse(pm.request.body);\r",
+									"pm.environment.set(\"userPas\", req.password);\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"sasa\",\r\n    \"email\": \"sasazivkovic2@mail.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET token as user (user)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salju se user podaci. (Sacuvati token sa responsa u user token)\r",
+									"\r",
+									"//Status 200\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is an object', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"//u responsu treba da postoji property token\r",
+									"pm.test('Response contains token', function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('token');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"//Sacuvaj token u userToken varijablu\r",
+									"pm.environment.set(\"userToken\", pm.response.json().token);\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"{{userMail}}\",\r\n    \"password\": \"{{userPas}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT be able to consume the route since no token was sent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Ne salje se token.\r",
+									"\r",
+									"//response 401\r",
+									"pm.test('Status code is 400', function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET all the users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se admin token.\r",
+									"\r",
+									"//Status 200\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be an object\", function() {\r",
+									"    pm.response.to.be.json; //Ovo provjerava da li je respons JSON.\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"//u responsu treba da postoji docs i da je niz.\r",
+									"pm.test(\"Response have docs and it is an array\", function() { \r",
+									"    pm.expect(pm.response.json()).to.have.property(\"docs\");\r",
+									"    pm.expect(pm.response.json().docs).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "**SR:**  \nTestovi u ovom folderu simuliraju administraciju korisnika. Pokrivene su sve CRUD operacije: kreiranje korisnika, čitanje podataka (lista i pojedinačni korisnik), izmena i brisanje. Dodati su i testovi filtriranja po roli.\n\n**EN:**  \nThis folder simulates user administration. It includes all CRUD operations: user creation, reading (list and individual), updating, and deleting. Role-based filtering tests are also included."
+		}
+	]
+}
