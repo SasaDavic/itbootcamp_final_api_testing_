@@ -18,23 +18,79 @@ The tests cover **CRUD operations** (Create, Read, Update, Delete) for multiple 
 - **Profile**: Manage user profiles
 - **User**: User administration (Create/Update/Delete)
 
+---
+
 ## 📄 Swagger Documentation
-The API documentation was accessed via Swagger.  
-The Swagger documentation was used to:
+
+The API documentation was accessed via Swagger.
+
+You can view the documentation in two ways:
+
+### ✅ Option 1 – View online using Swagger Editor:
+1. Open 👉 [Swagger Editor](https://editor.swagger.io/)
+2. Click **File → Import File**
+3. Upload this file from the repo: [`docs/swagger.yaml`](docs/swagger.yaml)
+
+### ✅ Option 2 – Copy and paste:
+1. Open [`swagger.yaml`](https://github.com/SasaDavic/itbootcamp_final_api_testing_/blob/main/docs/swagger.yaml)
+2. Copy the raw content and paste it directly into the Swagger Editor
+
+The Swagger documentation helps to:
 - Understand the available API endpoints
-- Get the Base URL for API requests
+- Get the base URL for API requests (e.g., `http://localhost:3000`)
 - Verify request/response formats for test cases
 
-You can view the Swagger documentation by uploading the API's YAML file to:  
-👉 [Swagger Editor](https://editor.swagger.io/)
+---
 
-## 🔗 Postman Documentation
+## 🔗 Postman Documentation (Live)
+
 You can view the live Postman documentation here:  
 👉 [Postman API Documentation](https://documenter.getpostman.com/view/23500535/2sB2j1grfR)
 
-## 🚀 How to Run the Tests
-1. Download or clone this repository.
-2. Import the collection from the `collection` folder into Postman.
-3. Import the environment file from the `collection` folder into Postman.
-4. Make sure the API server is running locally or adjust the environment settings accordingly.
-5. Run the collection manually or using the Collection Runner.
+---
+
+## 📦 Local Postman Collection
+
+If you'd like to run the API tests locally:
+
+1. Download the following files:
+   - [`api_testing_collection.postman_collection.json`](collection/api_testing_collection.postman_collection.json) (Postman Collection)
+   - [`api_testing_environment.postman_environment.json`](collection/api_testing_environment.postman_environment.json) (Postman Environment)
+   
+2. Open Postman
+
+3. Click **File → Import** and import both the collection and the environment files.
+
+4. After importing, ensure the correct environment is selected in the top right corner of Postman.
+
+5. Run the collection or specific requests using the **Collection Runner**.
+
+---
+
+## 📂 Project Structure
+├── docs/ 
+│ └── swagger.yaml # API documentation (OpenAPI 3.0) 
+├── collection
+│ └── api_testing_collection.postman_collection.json
+│ └── api_testing_environment.postman_environment.json
+├── README.md
+
+
+---
+
+## 🧾 Notes
+
+> ⚠️ If the API or test scenarios change, please make sure to:
+> - Update the `swagger.yaml` file in the `docs/` folder
+> - Re-export and upload the latest Postman collection JSON
+
+---
+
+## 👩‍💻 Author
+
+**Sasa (Davic) Zivkovic**  
+GitHub: [github.com/SasaDavic](https://github.com/SasaDavic)
+
+
+
+
