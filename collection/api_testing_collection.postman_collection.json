@@ -5,7 +5,7 @@
 		"description": "**SR:**\n\nOva kolekcija sadrži testove za REST API aplikaciju koja upravlja korisnicima, profilima i gradovima. Testovi su organizovani u četiri logičke grupe: **auth**, **city**, **profile** i **user**. Pokrivene su standardne **CRUD operacije** (Create, Read, Update, Delete), kao i dodatne validacije, autentifikacija i verifikacija korisnika.\n\nCilj je da se simuliraju realne situacije kroz koje korisnik ili administrator prolazi tokom korišćenja aplikacije – od registracije i prijave, do ažuriranja profila i upravljanja korisnicima i gradovima.\n\n**EN:**\n\nThis collection contains tests for a REST API application that manages users, profiles, and cities. The tests are organized into four logical groups: auth, city, profile, and user. Standard CRUD operations (Create, Read, Update, Delete) are covered, along with additional validations, authentication, and user verification.\n\nThe goal is to simulate real-world scenarios that a user or administrator may encounter while using the application – from registration and login to profile updates and managing users and cities.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "23500535",
-		"_collection_link": "https://www.postman.com/material-cosmonaut-58351614/workspace/it-bootcamp-x/collection/23500535-606387d6-0967-4d08-a5e7-98647f152c99?action=share&source=collection_link&creator=23500535"
+		"_collection_link": "https://www.postman.com/material-cosmonaut-58351614/workspace/24cfb4e0-dbf4-4158-9f84-949ce31f3182/collection/23500535-606387d6-0967-4d08-a5e7-98647f152c99?action=share&source=collection_link&creator=23500535"
 	},
 	"item": [
 		{
@@ -1106,6 +1106,13 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
 						}
 					],
 					"request": {
@@ -1123,7 +1130,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Nis\"\r\n}",
+							"raw": "{\r\n    \"name\": \"{{$randomCity}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2406,7 +2413,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"sasa\",\r\n    \"email\": \"sasazivkovic2@mail.com\",\r\n    \"password\": \"12345\"\r\n}",
+							"raw": "{\r\n    \"name\": \"sasa\",\r\n    \"email\": \"sasazivkovic1@mail.com\",\r\n    \"password\": \"12345\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2590,6 +2597,942 @@
 							],
 							"path": [
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET the users with filters",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se admin token.\r",
+									"\r",
+									"//Status 200\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response is an object\", function() {\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"//u responsu treba da postoji docs i da je niz.\r",
+									"pm.test(\"Response have property docs and docs is an array\", function() {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"docs\");\r",
+									"    pm.expect(pm.response.json().docs).to.be.an(\"array\");\r",
+									"});\r",
+									"//dosc treba da bude duzine 1.\r",
+									"pm.test(\"property docs is an array with length 1\", function() {\r",
+									"    pm.expect(pm.response.json().docs).to.have.lengthOf(1);\r",
+									"});\r",
+									"//treba da postoji korisnik/ci ciji email sadrzi “admin” string\r",
+									"pm.test(\"Response should have user with email containing 'admin'\", function() {\r",
+									"    let usersDocs = pm.response.json().docs;\r",
+									"    let foundUser = false;  // Flag to check if we've found the user\r",
+									"    for (let i = 0; i < usersDocs.length; i++) {\r",
+									"        if (usersDocs[i].email.includes(\"admin\")) {\r",
+									"            pm.expect(usersDocs[i].email).to.includes(\"admin\");\r",
+									"            foundUser = true;\r",
+									"            break;\r",
+									"        }\r",
+									"    }\r",
+									"    pm.expect(foundUser).to.be.true;  \r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users?filter=admin&fields=email",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "admin"
+								},
+								{
+									"key": "fields",
+									"value": "email"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT POST a user without name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se admin token.\r",
+									"\r",
+									"//Status 422\r",
+									"pm.test('Status code is 422', function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is object', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"//response treba da ima property errors\r",
+									"pm.test('Response has errors property', function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('errors');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"user@mail.com\",\r\n    \"password\": \"123456\",\r\n    \"role\": \"user\",\r\n    \"phone\": 123456,\r\n    \"city\": \"Nis\",\r\n    \"country\": \"Srbija\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should POST a user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se admin token.\r",
+									"//Salje se validan user objekat.\r",
+									"//(Sacuvati id usera, za kasnije)\r",
+									"\r",
+									"//Status 201\r",
+									"pm.test('Status code is 201', function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is an object', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"//response treba da ima propertije _id, name, email, verification\r",
+									"pm.test('Response has correct properties', function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('_id');\r",
+									"    pm.expect(pm.response.json()).to.have.property('name');\r",
+									"    pm.expect(pm.response.json()).to.have.property('email');\r",
+									"    pm.expect(pm.response.json()).to.have.property('verification');\r",
+									"});\r",
+									"\r",
+									"//Sacuvati id usera, za kasnije\r",
+									"pm.environment.set(\"userId\", pm.response.json()._id);\r",
+									"pm.environment.set(\"verificationId\", pm.response.json().verification);\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"User\",\r\n    \"email\": \"user1@mail.com\",\r\n    \"password\": \"123456\",\r\n    \"role\": \"user\",\r\n    \"phone\": 123456,\r\n    \"city\": \"Nis\",\r\n    \"country\": \"Srbija\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT POST a user with email that already exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se admin token.\r",
+									"//Salje se user sa emailom koji vec postoji u bazi.\r",
+									"\r",
+									"//Status 422\r",
+									"pm.test('Status code is 422', function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is object', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"//response treba da ima property message\r",
+									"pm.test('Response has message property', function () {\r",
+									"    pm.expect(pm.response.json().errors).to.have.property('msg');\r",
+									"});\r",
+									"\r",
+									"//response treba da ima property errors\r",
+									"pm.test('Response has errors property', function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"{{adminName}}\",\r\n    \"email\": \"{{adminMail}}\",\r\n    \"password\": \"123456\",\r\n    \"role\": \"user\",\r\n    \"phone\": 123456,\r\n    \"city\": \"Nis\",\r\n    \"country\": \"Srbija\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT POST a user with not known role",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se admin token. \r",
+									"//Validne role su “admin” i “user”.\r",
+									"\r",
+									"//Status 422\r",
+									"pm.test('Status code is 422', function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test(\"response should be an object\", function() {\r",
+									"    pm.response.to.be.json; \r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"//response treba da ima property errors\r",
+									"pm.test(\"Response should have property errors\", function() {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"errors\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"User\",\r\n    \"email\": \"user@mail.com\",\r\n    \"password\": \"123456\",\r\n    \"role\": \"king\",\r\n    \"phone\": 123456,\r\n    \"city\": \"Nis\",\r\n    \"country\": \"Srbija\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should GET a user by the given id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se admin token.\r",
+									"\r",
+									"//Status 200\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test(\"response should be an object\", function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"//response treba da ima property name\r",
+									"pm.test(\"Response should have property name\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"name\");\r",
+									"});\r",
+									"\r",
+									"//response treba da ima property _id i da je taj id jednak prosledjenom.\r",
+									"pm.test(\"response should have property _id and it should be equal to adminId\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"_id\");\r",
+									"    pm.expect(pm.response.json()._id).to.eql(pm.environment.get(\"userId\"));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"User\",\r\n    \"email\": \"user@mail.com\",\r\n    \"password\": \"123456\",\r\n    \"role\": \"king\",\r\n    \"phone\": 123456,\r\n    \"city\": \"Nis\",\r\n    \"country\": \"Srbija\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should UPDATE a user given the id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se admin token.\r",
+									"//Salje se novo ime za usera i novi email koji ne postoji u bazi.\r",
+									"\r",
+									"//Status 200\r",
+									"pm.test('Status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is an object', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"//response treba da ima property name i da je jednak prosledjenom name-u\r",
+									"pm.test(\"Response should have property name and it should be equal to the passed name\", function () {\r",
+									"    pm.expect(pm.response.json().name).to.eql(pm.variables.get(\"name\"));\r",
+									"    pm.environment.set(\"userName\", pm.variables.get(\"name\"));\r",
+									"});\r",
+									"//response treba da ima property _id i da je taj id jednak prosledjenom.\r",
+									"pm.test(\"Response should have property _id and it should be equal to the passed id\", function () {\r",
+									"    pm.expect(pm.response.json()._id).to.eql(pm.environment.get(\"userId\"));\r",
+									"});\r",
+									"\r",
+									"//response treba da ima property email i da je taj email jednak prosledjenom.\r",
+									"pm.test(\"Response should have property email and it should be equal to the passed email\", function () {\r",
+									"    pm.expect(pm.response.json().email).to.eql(pm.variables.get(\"email\"));\r",
+									"    pm.environment.set(\"userMail\", pm.variables.get(\"email\"));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"name\", \"User_update\");\r",
+									"pm.variables.set(\"email\", \"user_update@mail.com\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"user\",\r\n    \"name\": \"{{name}}\",\r\n    \"email\": \"{{email}}\",\r\n    \"phone\": \"123456\",\r\n    \"city\": \"Nis\",\r\n    \"country\": \"Srbija\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT UPDATE a user with email that already exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se admin token.\r",
+									"//Salje se email korisnka koji vec postoji u bazi\r",
+									"\r",
+									"//Status 422\r",
+									"pm.test('Status code is 422', function () {\r",
+									"    pm.response.to.have.status(422);\r",
+									"});\r",
+									"\r",
+									"//response treba da bude object\r",
+									"pm.test('Response is an object', function () {\r",
+									"    pm.response.to.be.json;\r",
+									"    pm.expect(pm.response.json()).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"//response treba da ima property errors\r",
+									"pm.test('Response has errors property', function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property('errors');\r",
+									"});\r",
+									"\r",
+									"//response treba da ima property errors.msg\r",
+									"pm.test('Response has errors.msg property', function () {\r",
+									"    pm.expect(pm.response.json().errors).to.have.property('msg');\r",
+									"});\r",
+									"\r",
+									"//response treba da ima property errors.msg sa vrednoscu EMAIL_ALREADY_EXISTS\r",
+									"pm.test('Response has errors.msg with value EMAIL_ALREADY_EXISTS', function () {\r",
+									"    pm.expect(pm.response.json().errors.msg).to.eql('EMAIL_ALREADY_EXISTS');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"user\",\r\n    \"name\": \"User_update\",\r\n    \"email\": \"{{adminMail}}\",\r\n    \"phone\": \"123456\",\r\n    \"city\": \"Nis\",\r\n    \"country\": \"Srbija\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should NOT UPDATE another user if not an admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se user token.\r",
+									"//Status 401\r",
+									"pm.test('Status code is 401', function () {\r",
+									"    pm.response.to.have.status(401);\r",
+									"});\r",
+									"\r",
+									"pm.test('Response is valid object', function () {\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test('Response contains errors property', function () {    \r",
+									"    pm.expect(pm.response.json()).to.have.property(\"errors\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"user\",\r\n    \"name\": \"User_update\",\r\n    \"email\": \"brad71@yahoo.com\",\r\n    \"phone\": \"123456\",\r\n    \"city\": \"Nis\",\r\n    \"country\": \"Srbija\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "it should DELETE a user given the id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Salje se admin token.\r",
+									"//Brisanje korisnika.\r",
+									"\r",
+									"//Status 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"//response treba da bude object\r",
+									"pm.test(\"Response should be object\", function () {\r",
+									"    pm.expect(pm.response.json()).to.be.an(\"object\");\r",
+									" });\r",
+									"\r",
+									"//response treba da ima property msg i da taj msg ima vrednost DELETED\r",
+									"pm.test(\"Response should have property msg with value DELETED\", function () {\r",
+									"    pm.expect(pm.response.json()).to.have.property(\"msg\");\r",
+									"    pm.expect(pm.response.json().msg).to.equal(\"DELETED\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete created user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/{{userId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.unset(\"adminToken\");\r",
+									"pm.environment.unset(\"adminMail\");\r",
+									"pm.environment.unset(\"adminName\");\r",
+									"pm.environment.unset(\"adminPas\");\r",
+									"pm.environment.unset(\"adminId\");\r",
+									"pm.environment.unset(\"userToken\");\r",
+									"pm.environment.unset(\"userMail\");\r",
+									"pm.environment.unset(\"userPas\");\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}",
+							"host": [
+								"{{baseUrl}}"
 							]
 						}
 					},
